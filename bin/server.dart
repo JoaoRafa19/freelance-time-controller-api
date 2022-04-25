@@ -12,6 +12,8 @@ void main(List<String> args) async {
   RouteHandler(app);
   // For running in containers, we respect the PORT environment variable.
   final port = int.fromEnvironment('PORT', defaultValue: 8080);
+  final PORT = int.parse(Platform.environment['PORT'] ?? '8080');
+  print('port = $port and PORT = $PORT');
 
   var server = await io.serve(app, address, port);
 

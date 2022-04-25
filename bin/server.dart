@@ -16,6 +16,6 @@ void main(List<String> args) async {
   var server = await io.serve(app, address, port);
 
   server.autoCompress = true;
-
+  print('server running on http://${server.address}:${server.port}');
   print('Server listening on port ${server.port}');
 }

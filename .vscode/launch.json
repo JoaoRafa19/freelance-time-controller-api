@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "freelance-time-controller-api",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Dev",
+            "type": "dart",
+            "request": "launch",
+            "program": "bin/server.dart",
+            "args": [
+                "--port",
+                "8080"
+            ],
+        },
+        {
+            "name": "dart",
+            "program": "bin/server.dart",
+            "request": "launch",
+            "type": "dart"
+        }
+    ]
+
+//     nodemon -x 'dart run bin/api_test.da
+// rt' -e dart
+}

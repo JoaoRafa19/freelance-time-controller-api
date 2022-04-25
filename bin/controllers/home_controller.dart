@@ -6,6 +6,7 @@ import 'package:shelf_router/shelf_router.dart';
 class HomeController {
   Handler get handler {
     final router = Router();
+    
     router.get('/', (Request request) {
       String message = JsonEncoder.withIndent('  ').convert({
         'message': 'Hello, World!',

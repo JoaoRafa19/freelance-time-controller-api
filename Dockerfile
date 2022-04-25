@@ -1,24 +1,15 @@
-# Use latest stable channel SDK.
-FROM google/dart
-
-# Resolve app dependencies.
+FROM dart
+# uncomment next line to ensure latest Dart and root CA bundle
+#RUN apt -y update && apt -y upgrade
 WORKDIR /app
-COPY pubspec.* ./
+COPY pubspec.* .
 RUN dart pub get
-RUN pub get --offline
-
-
-
-# Copy app source code (except anything in .dockerignore) and AOT compile app.
 COPY . .
-RUN dart compile exe bin/server.dart -o bin/server
-
-# Build minimal serving image from AOT-compiled `/server`
-# and the pre-built AOT-runtime in the `/runtime/` directory of the base image.
-FROM scratch
-COPY --from=build /runtime/ /
-COPY --from=build /app/bin/server /app/bin/
-
-# Start server.
+RUN pub get --offline
+RUN dart compile exe /app/bin/server.dart -o /app/bin/server
+FROM subfuzion/dart-scratch
+COPY --from=0 /app/bin/server /app/bin/server
+# COPY any other directories or files you may require at runtime, ex:
+#COPY --from=0 /app/static/ /app/static/
 EXPOSE 8080
-CMD ["/app/bin/server"]
+ENTRYPOINT ["/app/bin/server"]

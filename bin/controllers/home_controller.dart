@@ -16,10 +16,13 @@ class HomeController {
           headers: {'content-type': 'application/json'});
     });
 
-    router.get('/echo/<message>', (Request request) {
-      final message = request.params["message"];
+    router.get('/echo/<message>', (Request request, String message) {
       return Response.ok('Echo: $message',
           headers: {'content-type': 'application/json'});
+    });
+
+    router.get("/vevemeuamor", (Request req) {
+      return Response.ok("Te amo coisa linda!");
     });
 
     // Mount Controller

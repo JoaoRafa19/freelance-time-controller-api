@@ -8,10 +8,10 @@ import 'routehandler.dart';
 void main(List<String> args) async {
   // Use any available host or container IP (usually `0.0.0.0`).
   final app = Router();
-  final address = InternetAddress.anyIPv4;
+  final address = InternetAddress.anyIPv4.address;
   RouteHandler(app);
   // For running in containers, we respect the PORT environment variable.
-  final port = int.parse(Platform.environment['PORT'] ?? '8080');
+  final port = int.parse(Platform.environment['PORT'] ?? '8000');
   var server = await io.serve(app, address, port);
   server.handleError((error) {
     print('Error: $error');

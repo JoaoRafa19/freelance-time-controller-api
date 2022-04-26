@@ -2,9 +2,9 @@ FROM dart
 # uncomment next line to ensure latest Dart and root CA bundle
 #RUN apt -y update && apt -y upgrade
 WORKDIR /app
-COPY pubspec.* .
+COPY pubspec.* ./
 RUN dart pub get
-COPY . .
+COPY ./ ./
 RUN pub get --offline
 RUN dart compile exe /app/bin/server.dart -o /app/bin/server
 FROM subfuzion/dart-scratch

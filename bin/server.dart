@@ -13,6 +13,9 @@ void main(List<String> args) async {
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
   var server = await io.serve(app, address, port);
+  server.handleError((error) {
+    print('Error: $error');
+  });
   server.autoCompress = true;
   print('server running on http://${server.address.address}:${server.port}');
   print("alteração atoa");

@@ -10,7 +10,7 @@ class HomeController {
     router.get('/', (Request request) {
       String message = JsonEncoder.withIndent('  ').convert({
         'message': 'Hello, World!',
-        'datetime': DateTime.now().toString(),
+        'server datetime': DateTime.now().toString(),
       });
       return Response.ok(message);
     });

@@ -11,12 +11,8 @@ void main(List<String> args) async {
   final address = InternetAddress.anyIPv4;
   RouteHandler(app);
   // For running in containers, we respect the PORT environment variable.
-  final port = int.fromEnvironment('PORT', defaultValue: 8080);
-  final PORT = int.parse(Platform.environment['PORT'] ?? '8080');
-  print('port = $port and PORT = $PORT');
-
+  final port = int.parse(Platform.environment['PORT'] ?? '8080');
   var server = await io.serve(app, address, port);
-
   server.autoCompress = true;
   print('server running on http://${server.address.address}:${server.port}');
   print("alteração atoa");

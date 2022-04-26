@@ -22,7 +22,8 @@ class HomeController {
     });
 
     router.get("/vevemeuamor", (Request req) {
-      return Response.ok("Te amo coisa linda!");
+      return Response.ok("<html><h1>Te amo coisa linda!</h1></html>",
+          headers: {'content-type': 'text/html'});
     });
 
     // Mount Controller

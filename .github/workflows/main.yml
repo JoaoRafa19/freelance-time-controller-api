@@ -1,4 +1,4 @@
-name: '' # set whatever name you want to your github job
+name: 'Deploy' # set whatever name you want to your github job
 on:
   push:
     branches:

@@ -8,11 +8,15 @@ class HomeController {
     final router = Router();
     
     router.get('/', (Request request) {
+      
       String message = JsonEncoder.withIndent('  ').convert({
-        'message': 'Hello, World!',
+        'message': 'Api em desenolvimento',
+        
         'server datetime': DateTime.now().toString(),
       });
-      return Response.ok(message);
+      return Response.ok(message, headers: {
+        'content-type': 'application/json'
+      });
     });
 
     // Mount Controller

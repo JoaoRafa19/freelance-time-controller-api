@@ -5,19 +5,21 @@ import 'package:shelf_router/shelf_router.dart';
 
 import 'routehandler.dart';
 
-void main(List<String> args) async {
-  // Use any available host or container IP (usually `0.0.0.0`).
+main(List<String> args) async {
   final app = Router();
   final address = InternetAddress.anyIPv4.address;
   RouteHandler(app);
-  // For running in containers, we respect the PORT environment variable.
+
+  // Start the server.
   final port = int.parse(Platform.environment['PORT'] ?? '8000');
   var server = await io.serve(app, address, port);
   server.handleError((error) {
     print('Error: $error');
   });
+  server.serverHeader = 'dart-server';
   server.autoCompress = true;
-  print('server running on http://${server.address.address}:${server.port}');
-  print("alteração atoa");
-  print('Server listening on port ${server.port}');
+
+  print('Serving at http://${server.address.address}:${server.port}');
 }
+
+Future initialConfiguration() async {}

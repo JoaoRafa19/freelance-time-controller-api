@@ -2,12 +2,11 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
-import 'routehandler.dart';
 
 main(List<String> args) async {
   final app = Router();
   final address = InternetAddress.anyIPv4.address;
-  RouteHandler(app);
+  
   final handler = const Pipeline().addMiddleware(logRequests()).addHandler(app);
 
   // Start the server.

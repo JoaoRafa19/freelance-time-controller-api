@@ -9,5 +9,7 @@ class AuthController {
     return Response.ok('Hello World');
   }
 
+  
+
   Router get router => _$AuthControllerRouter(this);
 }

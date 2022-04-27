@@ -5,6 +5,9 @@ import 'package:dart_dotenv/dart_dotenv.dart';
 import '../../coreconfig.dart';
 
 class Database {
+
+  
+
   late Db db;
   Future<Db> openConnection() async {
     db = Db(Config.instance.mongoUrl!);

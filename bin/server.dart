@@ -8,7 +8,7 @@ import 'modules/auth/auth_controller.dart';
 
 main(List<String> args) async {
   final router = Router()
-    ..mount('/auth/', AuthController().router);
+    ..mount('/auth', AuthController().router);
   
   final address = InternetAddress.anyIPv4.address;
   final handler =

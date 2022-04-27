@@ -4,14 +4,14 @@ class User {
   final String? email;
   final String? password;
 
-  User(this.id, this.name, this.email, this.password);
+  User({this.id, this.name, this.email, this.password});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      json['id'] as int?,
-      json['name'] as String?,
-      json['email'] as String?,
-      json['password'] as String?,
+      id:json['id'] as int?,
+      name:json['name'] as String?,
+      email:json['email'] as String?,
+      password:json['password'] as String?,
     );
   }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+import '../../core/shared/utils.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
 
@@ -78,7 +79,18 @@ class AuthController {
   Future<Response> login(Request req) async {
     try {
       final repository = AuthRepository.instance;
+      final userrepo = UserRepository.instance;
       Map<String, dynamic> params = req.url.queryParameters;
+
+      if (params.containsKey('email') && params.containsKey('password')) {
+        final result = await repository.login(params["email"], params["password"]);
+        
+
+        // create token
+          
+
+        return Response.ok(json.encode(result));
+      }
 
       return Response.internalServerError(body:"forbiden");
 

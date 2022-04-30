@@ -3,31 +3,87 @@ import 'dart:convert';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
 
 part 'auth_controller.g.dart';
 
 class AuthController {
-  @Route.get('/')
-  Future<Response> findAll(Request request) async {
-    return Response.ok('Hello World');
-  }
-
-  @Route.post('create')
+  @Route.post('/create')
   Future<Response> create(Request request) async {
     try {
       final repository = UserRepository.instance;
-      final body = await request.readAsString();
-      final json = jsonDecode(body);
-      final username = json['username'] as String;
-      final password = json['password'] as String;
+      Map body = jsonDecode(await request.readAsString());
+      if (body.containsKey('name') &&
+          body.containsKey('password') &&
+          body.containsKey('email')) {
+        final userAlreadyRegistrated =
+            await repository.findByEmail(body['email']);
+        if (userAlreadyRegistrated != null) {
+          throw Exception("User already registered");
+        }
+        final validateEmail = body['email'];
+        if (!validateEmail.contains('@')) {
+          throw Exception("Invalid email");
+        }
 
-      await repository.add(username, password);
+        await repository.add(body['name'], body['password'], validateEmail);
+        return Response.ok(json.encode('user created'));
+      }
+      return Response.badRequest(body: 'name and password are required');
+    } catch (e) {
+      return Response.badRequest(body: e.toString());
+    }
+  }
 
-      return Response.ok('User created');
-
+  //delete all users
+  @Route.delete('/deleteall')
+  Future<Response> deleteAll(Request request) async {
+    try {
+      final repository = UserRepository.instance;
+      await repository.deleteAll();
+      return Response.ok(json.encode('all users deleted'));
     } catch (e) {
       return Response.internalServerError(body: e.toString());
+    }
+  }
+
+  @Route.delete('/delete')
+  Future<Response> del(Request req) async {
+    try {
+      final repository = UserRepository.instance;
+      Map<String, dynamic> params = req.url.queryParameters;
+      if (params.containsKey('id')) {
+        final user = await repository.findById(params['id']);
+        if (user == null || user.id == null) {
+          throw Exception("User not found");
+        }
+        await repository.delete(user.id!);
+        return Response.ok(json.encode('user deleted'));
+      } else if (params.containsKey('email')) {
+        final user = await repository.findByEmail(params['email']);
+        if (user == null || user.id == null) {
+          throw Exception("User not found");
+        }
+        await repository.delete(user.id!);
+        return Response.ok(json.encode('user deleted'));
+      }
+      return Response.badRequest(body: 'id or email are required');
+    } catch (e) {
+      return Response.internalServerError(body: e.toString());
+    }
+  }
+
+  @Route.post('/login')
+  Future<Response> login(Request req) async {
+    try {
+      final repository = AuthRepository.instance;
+      Map<String, dynamic> params = req.url.queryParameters;
+
+      return Response.internalServerError(body:"forbiden");
+
+    } catch (error) {
+      return Response.internalServerError(body: error.toString());
     }
   }
 

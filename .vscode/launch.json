@@ -5,28 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "freelance-time-controller-api",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
             "name": "Dev",
             "type": "dart",
             "request": "launch",
             "program": "bin/server.dart",
             "args": [
-                "--port",
-                "8080"
+                "-e",
+                "dev.env",
             ],
         },
         {
-            "name": "dart",
-            "program": "bin/server.dart",
+            "name": "Prod",
+            "type": "dart",
             "request": "launch",
-            "type": "dart"
-        }
+            "program": "bin/server.dart",
+            "args": [
+                "-e",
+                ".env",
+            ],
+        },
     ]
 
-//     nodemon -x 'dart run bin/api_test.da
 // rt' -e dart
 }

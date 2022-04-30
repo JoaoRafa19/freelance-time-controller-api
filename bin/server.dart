@@ -1,28 +1,48 @@
 import 'dart:io';
+import 'package:args/args.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
-
-import 'coreconfig.dart';
+import 'core/shared/coreconfig.dart';
 import 'modules/auth/auth_controller.dart';
 
 main(List<String> args) async {
-  final router = Router()
-    ..mount('/auth', AuthController().router);
-  
-  final address = InternetAddress.anyIPv4.address;
+  // Arguments
+  var parser = ArgParser()
+    ..addOption('port',
+        abbr: 'p', defaultsTo: '8080', help: "Port to listen on.")
+    ..addOption('enviroment',
+        abbr: 'e',
+        defaultsTo: '.dev',
+        help: "Enviroment file to load.",
+        valueHelp: "filename")
+    ..addFlag('help', abbr: 'h', negatable: false);
+
+  var arguments = parser.parse(args);
+
+  if (arguments['help']) {
+    print('Usage: server [options]');
+    print(parser.usage);
+    exit(0);
+  }
+  // Enviroment definition
+  print("Loading enviroment ${arguments['enviroment']}");
+  Config.initialize([arguments['enviroment']]);
+
+  final router = Router()..mount('/auth', AuthController().router);
+  // initialize server
+
   final handler =
       const Pipeline().addMiddleware(logRequests()).addHandler(router);
-  Config.initialize();
   // Start the server.
-  final port = int.parse(Config.instance.port ?? '3000');
-  var server = await io.serve(handler, address, port);
-  server.handleError((error) {
-    print('Error: $error');
-  });
-  server.serverHeader = 'dart-server';
-  server.autoCompress = true;
-  server.serverHeader = 'dart-server';
+  var server =
+      await io.serve(handler, Config.instance.address, Config.instance.port)
+        ..handleError((error) {
+          print('Error: $error');
+        })
+        ..serverHeader = 'dart-server'
+        ..autoCompress = true
+        ..serverHeader = 'dart-server';
 
   print('Serving at http://${server.address.address}:${server.port}');
 }

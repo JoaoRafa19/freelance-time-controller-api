@@ -6,6 +6,8 @@ COPY pubspec.* ./
 RUN dart pub get
 COPY ./ ./
 RUN pub get --offline
+RUN dart pub run build_runner build
+COPY ./ ./
 RUN dart compile exe /app/bin/server.dart -o /app/bin/server
 FROM subfuzion/dart-scratch
 COPY --from=0 /app/bin/server /app/bin/server

@@ -2,6 +2,7 @@
 Dockerfile
 build/
 .dart_tool/
+*.g.dart
 .git/
 .github/
 .gitignore

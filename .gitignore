@@ -2,6 +2,11 @@
 .dart_tool/
 .packages
 .env
+dev.env
 
 # Conventional directory for build output.
 build/
+
+*.g.dart
+
+./bin/modules/auth/auth_controller.g.dart

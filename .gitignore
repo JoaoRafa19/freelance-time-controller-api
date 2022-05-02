@@ -8,3 +8,5 @@ dev.env
 build/
 
 *.g.dart
+
+./bin/modules/auth/auth_controller.g.dart

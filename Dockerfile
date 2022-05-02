@@ -6,7 +6,7 @@ COPY pubspec.* ./
 RUN dart pub get
 COPY ./ ./
 RUN pub get --offline
-RUN dart pub run build_runner build
+RUN dart pub run build_runner build --delete-conflicting-outputs
 COPY ./ ./
 RUN dart compile exe /app/bin/server.dart -o /app/bin/server
 FROM subfuzion/dart-scratch

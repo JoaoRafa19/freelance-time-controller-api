@@ -6,3 +6,5 @@ dev.env
 
 # Conventional directory for build output.
 build/
+
+*.g.dart

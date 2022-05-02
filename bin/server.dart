@@ -5,6 +5,7 @@ import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
 import 'core/shared/coreconfig.dart';
 import 'modules/auth/auth_controller.dart';
+import 'modules/user/user_controller.dart';
 
 main(List<String> args) async {
   // Arguments
@@ -29,7 +30,9 @@ main(List<String> args) async {
   print("Loading enviroment ${arguments['enviroment']}");
   Config.initialize([arguments['enviroment']]);
 
-  final router = Router()..mount('/auth', AuthController().router);
+  final router = Router()
+    ..mount('/users', UserController().router)
+    ..mount('/auth', AuthController().router);
   // initialize server
 
   final handler =

@@ -13,10 +13,10 @@ class UserRepository {
 
   UserRepository._internal();
 
-  Future<User?>? findByEmail(String email) async {
+  Future<User?> findByEmail(String email) async {
     final db = await Database().openConnection();
     final collection = db.collection(collectionName);
-    final user = await collection.findOne(where.eq('email', email));
+    final user = await collection.findOne(where.eq("email", email));
     if (user != null) {
       return User.fromJson(user);
     }
@@ -29,10 +29,8 @@ class UserRepository {
     final collection = db.collection(collectionName);
     final user = await collection.findOne(where.eq('id', id));
     if (user != null) {
-      await db.close();
       return User.fromJson(user);
     }
-    await db.close();
     return null;
   }
 
@@ -41,7 +39,6 @@ class UserRepository {
     final db = await Database().openConnection();
 
     final users = await db.collection(collectionName).find().toList();
-    await db.close();
     return users.map((user) => User.fromJson(user)).toList();
   }
 
@@ -53,7 +50,6 @@ class UserRepository {
           await db.collection(collectionName).findOne(where.eq("email", email));
 
       if (userAlreadyRegistrated != null) {
-        await db.close();
         throw Exception("User already registered");
       }
 
@@ -67,13 +63,10 @@ class UserRepository {
       );
 
       await db.collection(collectionName).insert(user.toJson());
-      await db.close();
     } catch (error) {
       rethrow;
     }
   }
-
-  
 
   deleteAll() async {
     final db = await Database().openConnection();
@@ -84,7 +77,6 @@ class UserRepository {
     try {
       final db = await Database().openConnection();
       await db.collection(collectionName).remove(where.eq('id', id));
-      await db.close();
     } catch (error) {
       rethrow;
     }

@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
-import '../../core/shared/utils.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
 
@@ -27,7 +27,6 @@ class AuthController {
         if (!validateEmail.contains('@')) {
           throw Exception("Invalid email");
         }
-
         await repository.add(body['name'], body['password'], validateEmail);
         return Response.ok(json.encode('user created'));
       }
@@ -75,27 +74,24 @@ class AuthController {
     }
   }
 
-  @Route.post('/login')
+  @Route.get('/login')
   Future<Response> login(Request req) async {
     try {
       final repository = AuthRepository.instance;
-      final userrepo = UserRepository.instance;
       Map<String, dynamic> params = req.url.queryParameters;
 
       if (params.containsKey('email') && params.containsKey('password')) {
-        final result = await repository.login(params["email"], params["password"]);
-        
-
-        // create token
-          
-
-        return Response.ok(json.encode(result));
+        Response result =
+            await repository.login(params["email"], params["password"]);
+        return result;
       }
-
-      return Response.internalServerError(body:"forbiden");
-
+      final response = Response(HttpStatus.unauthorized,
+          body: "incorrect user and/or password");
+      return response;
     } catch (error) {
-      return Response.internalServerError(body: error.toString());
+      return Response.internalServerError(
+          body: jsonEncode(
+              {"message": 'a problem ocourred', "error": error.toString()}));
     }
   }
 

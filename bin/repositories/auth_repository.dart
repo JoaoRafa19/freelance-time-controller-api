@@ -1,9 +1,11 @@
+import 'dart:convert';
+import 'dart:html';
+
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:shelf/shelf.dart';
 
 import '../core/database/database.dart';
 import '../core/shared/utils.dart';
-import '../models/user_model.dart';
 import 'user_repository.dart';
 
 class AuthRepository {
@@ -17,22 +19,30 @@ class AuthRepository {
   static const String collectionNameToken = 'token';
   static const String collectionSessionName = 'sessions';
 
-  DbCollection collection = DbCollection(Database().db, collectionName);
-  DbCollection sessions = DbCollection(Database().db, collectionSessionName);
   String secret = 'secret';
 
-  Future<Response> login(String username, String password) async {
+  Future<Response> login(String email, String password) async {
     try {
       final UserRepository userRepository = UserRepository.instance;
-      User? user = await userRepository.findByEmail(username);
-
+      final db = await Database().openConnection();
+      final user = await userRepository.findByEmail(email);
       if (user == null) {
         throw Exception("User not found");
       }
       if (await Utils.hashPassword(password) == user.password) {
-        print("password match");
+        Map<String, dynamic> session = {
+          'username': user.email,
+          'sessionToken': Uuid().v4()
+        };
+        await db.collection(collectionSessionName).insert(session);
+
+        return Response.ok(jsonEncode(session));
+      } else {
+        final response = Response(HttpStatus.unauthorized,
+            body: 'forbiden incorrect user and/or password');
+
+        return response;
       }
-      return Response.forbidden('user no found');
     } catch (e) {
       rethrow;
     }

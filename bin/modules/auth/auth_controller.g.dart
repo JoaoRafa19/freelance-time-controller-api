@@ -11,6 +11,6 @@ Router _$AuthControllerRouter(AuthController service) {
   router.add('POST', r'/create', service.create);
   router.add('DELETE', r'/deleteall', service.deleteAll);
   router.add('DELETE', r'/delete', service.del);
-  router.add('POST', r'/login', service.login);
+  router.add('GET', r'/login', service.login);
   return router;
 }

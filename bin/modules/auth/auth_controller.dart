@@ -32,7 +32,7 @@ class AuthController {
       }
       return Response.badRequest(body: 'name and password are required');
     } catch (e) {
-      return Response.badRequest(body: e.toString());
+      return Response.internalServerError(body: e.toString());
     }
   }
 

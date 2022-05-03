@@ -31,6 +31,7 @@ main(List<String> args) async {
   Config.initialize([arguments['enviroment']]);
 
   final router = Router()
+    ..mount('/', (request) => Response.ok('Hello World!'))
     ..mount('/users', UserController().router)
     ..mount('/auth', AuthController().router);
   // initialize server

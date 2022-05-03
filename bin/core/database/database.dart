@@ -13,10 +13,4 @@ class Database {
     return db;
   }
 
-// Future initialize() async {
-//     _db = Db('mongodb://localhost:27017');
-//     await _db.open();
-//     _collection = _db.collection('user');
-//   }
-
 }

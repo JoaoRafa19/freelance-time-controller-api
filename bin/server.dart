@@ -14,7 +14,7 @@ main(List<String> args) async {
         abbr: 'p', defaultsTo: '8080', help: "Port to listen on.")
     ..addOption('enviroment',
         abbr: 'e',
-        defaultsTo: '.dev',
+        defaultsTo: '.env',
         help: "Enviroment file to load.",
         valueHelp: "filename")
     ..addFlag('help', abbr: 'h', negatable: false);

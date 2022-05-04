@@ -31,6 +31,7 @@ main(List<String> args) async {
   Config.initialize([arguments['enviroment']]);
 
   final router = Router()
+    ..get('/', (request) => Response.ok('Hello World!'))
     ..mount('/users', UserController().router)
     ..mount('/auth', AuthController().router);
   // initialize server
@@ -48,4 +49,13 @@ main(List<String> args) async {
         ..serverHeader = 'dart-server';
 
   print('Serving at http://${server.address.address}:${server.port}');
+  print("ipv4");
+  print(InternetAddress.anyIPv4.address);
+  print(InternetAddress.anyIPv4.host);
+  print(InternetAddress.anyIPv4.rawAddress);
+  print("ipv6");
+
+  print(InternetAddress.anyIPv6.address);
+  print(InternetAddress.anyIPv6.host);
+  print(InternetAddress.anyIPv6.rawAddress);
 }

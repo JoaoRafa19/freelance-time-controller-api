@@ -7,6 +7,7 @@ class Database {
 
   Future<sb.Database> openConnection() async {
     sb.Database db = await _dbFactory.openDatabase(Config.instance.database!);
+    print('Database opened');
     return db;
   }
 }

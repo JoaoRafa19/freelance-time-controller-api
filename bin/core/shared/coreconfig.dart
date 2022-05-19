@@ -11,20 +11,25 @@ class Config {
     return instance;
   }
   Config._internal();
+  static final List<String> _defaultEnvParams = ['PORT', 'DATABASE'];
 
   static DotEnv dotenv = DotEnv(includePlatformEnvironment: true);
   String get portStr => dotenv.map['PORT'] ?? '3000';
   int get port => int.parse(portStr);
-  String? get mongoUrl => dotenv.map['MONGO_URL'];
+  String? get database => dotenv.map['DATABASE'];
   String get address => InternetAddress.anyIPv4.address;
   static void initialize(List<String> enviroment) {
-    dotenv.load(enviroment);
-    if (dotenv.isEveryDefined(['PORT', 'MONGO_URL'])) {
-      print('Config loaded');
-    } else {
-      throw Exception("Config not loaded");
+    try {
+      dotenv.load(enviroment);
+      if (dotenv.isEveryDefined(_defaultEnvParams)) {
+        print('Config loaded');
+      } else {
+        _defaultEnvParams.removeWhere((e) => dotenv.map[e] != null);
+        throw Exception("Config not loaded, missing enviroment variables \n ${_defaultEnvParams.join(', ')}");
+      }
+    } catch (e) {
+      print(e);
+      exit(1);
     }
   }
 }
-
-

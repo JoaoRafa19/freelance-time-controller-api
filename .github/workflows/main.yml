@@ -1,6 +1,9 @@
 name: docker-heroku CD
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches: [ master ]
     
@@ -18,8 +21,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     # Build Docker image
-    - name: Docker build
-      run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+    - name: Build and push Docker to Heroku
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_app_name: shiny-example
+        appdir: "."
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_email: ${{ secrets.HEROKU_EMAIL }}
+        usedocker: true
     # Push the Docker image to Heroku Container Registry
     - name: Publish
       run: |

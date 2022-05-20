@@ -21,11 +21,13 @@ class Config {
   static void initialize(List<String> enviroment) {
     try {
       dotenv.load(enviroment);
+      print(dotenv.map);
       if (dotenv.isEveryDefined(_defaultEnvParams)) {
         print('Config loaded');
       } else {
         _defaultEnvParams.removeWhere((e) => dotenv.map[e] != null);
-        throw Exception("Config not loaded, missing enviroment variables \n ${_defaultEnvParams.join(', ')}");
+        throw Exception(
+            "Config not loaded, missing enviroment variables \n ${_defaultEnvParams.join(', ')}");
       }
     } catch (e) {
       print(e);

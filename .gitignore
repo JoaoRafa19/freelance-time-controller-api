@@ -3,7 +3,7 @@
 .packages
 .env
 dev.env
-
+*.db
 # Conventional directory for build output.
 build/
 

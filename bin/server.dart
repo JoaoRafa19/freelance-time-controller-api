@@ -5,6 +5,7 @@ import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
 import 'core/shared/coreconfig.dart';
 import 'modules/auth/auth_controller.dart';
+import 'modules/root/root_controller.dart';
 import 'modules/user/user_controller.dart';
 
 main(List<String> args) async {
@@ -12,6 +13,7 @@ main(List<String> args) async {
   var parser = ArgParser()
     ..addOption('port',
         abbr: 'p', defaultsTo: '8080', help: "Port to listen on.")
+    ..addFlag('logip', abbr: 'l', defaultsTo: false, help: "Log IP address.")
     ..addOption('enviroment',
         abbr: 'e',
         defaultsTo: '.env',
@@ -32,6 +34,7 @@ main(List<String> args) async {
 
   final router = Router()
     ..get('/', (request) => Response.ok('Hello World!'))
+    ..mount('/index', RootController().router)
     ..mount('/users', UserController().router)
     ..mount('/auth', AuthController().router);
   // initialize server
@@ -49,4 +52,23 @@ main(List<String> args) async {
         ..serverHeader = 'dart-server';
 
   print('Serving at http://${server.address.address}:${server.port}');
+  print('Databse ${Config.instance.database}');
+
+  if (arguments['logip']) {
+    print('Logging IP address');
+
+    _logIp();
+  }
+}
+
+_logIp() {
+  print("ipv4");
+  print(InternetAddress.anyIPv4.address);
+  print(InternetAddress.anyIPv4.host);
+  print(InternetAddress.anyIPv4.rawAddress);
+  print("ipv6");
+
+  print(InternetAddress.anyIPv6.address);
+  print(InternetAddress.anyIPv6.host);
+  print(InternetAddress.anyIPv6.rawAddress);
 }

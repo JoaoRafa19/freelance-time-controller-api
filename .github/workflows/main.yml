@@ -22,7 +22,7 @@ jobs:
       uses: actions/checkout@v2
     # Build Docker image
     - name: Docker build
-      run: echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
+      run:  docker login --username=_ --password-stdin < $HEROKU_API_KEY registry.heroku.com
     # Push the Docker image to Heroku Container Registry
     - name: Publish
       run: |

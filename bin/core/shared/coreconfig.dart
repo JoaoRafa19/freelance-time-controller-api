@@ -9,7 +9,7 @@ class Config {
   static final Config instance = Config._internal();
   factory Config() {
     return instance;
-  }
+  } 
   Config._internal();
   static final List<String> _defaultEnvParams = ['PORT', 'DATABASE'];
 
@@ -21,7 +21,6 @@ class Config {
   static void initialize(List<String> enviroment) {
     try {
       dotenv.load(enviroment);
-      print(dotenv.map);
       if (dotenv.isEveryDefined(_defaultEnvParams)) {
         print('Config loaded');
       } else {

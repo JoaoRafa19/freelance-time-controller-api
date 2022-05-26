@@ -15,28 +15,31 @@ class UserRepository {
 
   UserRepository._internal();
 
-//   Future<User?> findByEmail(String email) async {
-//     final database = await db.Database().openConnection();
-//     final collection = db.collection(collectionName);
-//     final user = await collection.findOne(where.eq("email", email));
-//     if (user != null) {
-//       return User.fromJson(user);
-//     }
-//     return null;
-//   }
+  Future<User?> findByEmail(String email) async {
+    final database = await _db.Database().openConnection();
+    final finder = Finder(filter: Filter.equals('email', email));
+    final recordSnapshot = await storeRef.findFirst(database, finder: finder);
+    if (recordSnapshot != null) {
+      return User.fromJson(recordSnapshot.value);
+    }
+    return null;
+  }
 
-  //find by id
-  // Future<User?>? findById(String id) async {
-  //   final db = await Database().openConnection();
-  //   final collection = db.collection(collectionName);
-  //   final user = await collection.findOne(where.eq('id', id));
-  //   if (user != null) {
-  //     return User.fromJson(user);
-  //   }
-  //   return null;
-  // }
+  ///find a single user by [id]
+  ///return null if the user is not found
+  Future<User?>? findById(String id) async {
+    
+    final db = await _db.Database().openConnection();
 
-  //get all users
+    final finder = Finder(filter: Filter.equals("id", id));
+    final user = await storeRef.findFirst(db, finder: finder);
+    if (user != null) {
+      return User.fromJson(user.value);
+    }
+    return null;
+  }
+
+  ///get all the users in database
   Future<List<User>> findAll() async {
     final db = await _db.Database().openConnection();
 
@@ -72,17 +75,19 @@ class UserRepository {
     }
   }
 
-  // deleteAll() async {
-  //   final db = await Database().openConnection();
-  //   return await db.collection(collectionName).drop();
-  // }
+  deleteAll() async {
+    final db = await _db.Database().openConnection();
+    return await storeRef.delete(db, finder: Finder());
+  }
 
-  // delete(String id) async {
-  //   try {
-  //     final db = await Database().openConnection();
-  //     await db.collection(collectionName).remove(where.eq('id', id));
-  //   } catch (error) {
-  //     rethrow;
-  //   }
-  // }
+  delete(String id) async {
+    try {
+      final db = await _db.Database().openConnection();
+      var finder = Finder(
+          filter: Filter.equals('id', id), sortOrders: [SortOrder('id')]);
+      await storeRef.delete(db, finder: finder);
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

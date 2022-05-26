@@ -372,6 +372,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  shelf_test_handler:
+    dependency: "direct main"
+    description:
+      name: shelf_test_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   shelf_web_socket:
     dependency: transitive
     description:

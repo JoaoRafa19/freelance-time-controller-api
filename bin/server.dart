@@ -52,6 +52,7 @@ main(List<String> args) async {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
             'Access-Control-Allow-Headers': 'Origin, Content-Type',
+            'Content-Type': 'application/json'
           });
         }
         return null;
@@ -60,6 +61,7 @@ main(List<String> args) async {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
           'Access-Control-Allow-Headers': 'Origin, Content-Type',
+          'Content-Type': 'application/json'
         });
       }))
       .addHandler(router);

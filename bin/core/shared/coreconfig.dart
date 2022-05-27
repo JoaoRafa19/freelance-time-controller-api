@@ -13,6 +13,15 @@ class Config {
   Config._internal();
   static final List<String> _defaultEnvParams = ['PORT', 'DATABASE'];
 
+  static get expiresIn {
+    if (env == Enviroment.dev) {
+      return Duration(hours: 1);
+    }
+    return Duration(days: 1);
+  }
+
+  static Enviroment env = Enviroment.dev;
+
   static DotEnv dotenv = DotEnv(includePlatformEnvironment: true);
   String get portStr => dotenv.map['PORT'] ?? '3000';
   int get port => int.parse(portStr);
@@ -20,8 +29,10 @@ class Config {
   String get address => InternetAddress.anyIPv4.address;
   static void initialize(List<String> enviroment) {
     try {
+      if (!enviroment.contains('dev.env')) {
+        env = Enviroment.prod;
+      }
       dotenv.load(enviroment);
-      print(dotenv.map);
       if (dotenv.isEveryDefined(_defaultEnvParams)) {
         print('Config loaded');
       } else {
@@ -34,4 +45,9 @@ class Config {
       exit(1);
     }
   }
+}
+
+enum Enviroment {
+  dev,
+  prod,
 }

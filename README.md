@@ -10,7 +10,8 @@ configured to enable running with [Docker](https://www.docker.com/).
 [Postman documentation](https://documenter.getpostman.com/view/12983885/UyrHeD83)
 
 
-# Running the sample
+
+## Time controller api
 
 ## Running with the Dart SDK
 
@@ -22,13 +23,7 @@ $ dart bin/server.dart
 Server listening on port 8080
 ```
 
-And then from a second terminal:
-```
-$ curl http://0.0.0.0:8080
-Hello, World!
-$ curl http://0.0.0.0:8080/echo/I_love_Dart
-I_love_Dart
-```
+
 
 ## Running with Docker
 
@@ -44,9 +39,6 @@ Server listening on port 8080
 And then from a second terminal:
 ```
 $ curl http://0.0.0.0:8080
-Hello, World!
-$ curl http://0.0.0.0:8080/echo/I_love_Dart
-I_love_Dart
 ```
 
 You should see the logging printed in the first terminal:

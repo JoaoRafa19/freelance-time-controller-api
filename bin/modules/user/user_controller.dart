@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
-import '../../models/user_model.dart';
 import '../../repositories/user_repository.dart';
 
 part 'user_controller.g.dart';

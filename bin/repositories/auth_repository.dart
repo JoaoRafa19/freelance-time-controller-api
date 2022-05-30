@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:sembast/sembast.dart';
 import 'package:shelf/shelf.dart';
-
 import '../core/database/database.dart' as _db;
-import '../core/shared/coreconfig.dart';
 import '../core/shared/utils.dart';
 import '../models/session_model.dart';
 import 'user_repository.dart';

@@ -60,7 +60,7 @@ class UserRepository {
         throw Exception("User already registered");
       }
 
-      final passwordToSave = await Utils.hashPassword(password);
+      final passwordToSave = await hashPassword(password);
 
       final user = User(
         id: Uuid().v4(),

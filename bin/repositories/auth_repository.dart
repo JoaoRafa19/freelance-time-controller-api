@@ -29,7 +29,7 @@ class AuthRepository {
       if (user == null) {
         throw Exception("User not found");
       }
-      if (await Utils.hashPassword(password) == user.password) {
+      if (await hashPassword(password) == user.password) {
         final session = Session.newSession(user.email!);
         await storeRef.add(db, session.toJson());
 
@@ -44,7 +44,11 @@ class AuthRepository {
       rethrow;
     }
   }
-
+  /// Verify if the sessionToken is valid
+  /// return false if the sessionToken expire date is greater than now
+  /// 
+  /// ex: sessionToken.expireDate > DateTime.now()
+  /// [sessionToken] is the sessionToken to verify
   Future<bool> verifyToken(String token) async {
     try {
       final db = await _db.Database().openConnection();

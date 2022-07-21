@@ -19,3 +19,12 @@ Response makeResponse(int statusCode, {String? stringbody, Map? body}) {
   }
   return Response(statusCode);
 }
+
+Response makeErrorResponse(
+  Exception e, {
+  int? statusCode,
+}) {
+  return makeResponse(statusCode ?? 500, body: {
+    'traceback error': e.toString(),
+  });
+}

@@ -57,7 +57,8 @@ main(List<String> args) async {
           return Response.ok('', headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
-            'Access-Control-Allow-Headers': 'Origin, Content-Type',
+            'Access-Control-Allow-Headers':
+                'Origin, Content-Type, x-access-token',
             'Content-Type': 'application/json'
           });
         }
@@ -66,7 +67,8 @@ main(List<String> args) async {
         return response.change(headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
-          'Access-Control-Allow-Headers': 'Origin, Content-Type',
+          'Access-Control-Allow-Headers':
+              'Origin, Content-Type, x-access-token',
           'Content-Type': 'application/json'
         });
       }))

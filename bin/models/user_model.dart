@@ -3,8 +3,9 @@ class User {
   final String? name;
   final String? email;
   final String? password;
+  final int role;
 
-  User({this.id, this.name, this.email, this.password});
+  User({this.id, this.name, this.email, this.password = '', this.role = 0});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -12,6 +13,7 @@ class User {
       name:json['name'] as String?,
       email:json['email'] as String?,
       password:json['password'] as String?,
+      role:json['role'] as int,
     );
   }
 
@@ -21,6 +23,7 @@ class User {
       'name': name,
       'email': email,
       'password': password,
+      'role': role,
     };
   }
 }

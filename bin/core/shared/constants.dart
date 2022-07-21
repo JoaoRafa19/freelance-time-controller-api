@@ -1,18 +1,9 @@
-
-
 enum Strings {
-  acesstoken,
+  acesstoken(value: 'x-access-token'),
+  database(value: 'DATABASE'),
+  devenv(value: 'dev.env'),
+  port(value: 'PORT');
+
+  final String value;
+  const Strings({required this.value});
 }
-
-extension StringsExtension on Strings {
-  String get value {
-    switch (this) {
-      case Strings.acesstoken:
-        return 'x-access-token';
-
-      default:
-        return '';
-    }
-  }
-}
-

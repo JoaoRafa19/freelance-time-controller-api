@@ -25,7 +25,7 @@ class UserRepository {
     return null;
   }
 
-  ///find a single user by [id]
+  ///find a single user by `id`
   ///return null if the user is not found
   Future<User?>? findById(String id) async {
     

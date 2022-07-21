@@ -11,6 +11,7 @@ authMiddleware() {
   return createMiddleware(requestHandler: (req.Request request) async {
     try {
       final token = request.headers[Strings.acesstoken.value];
+
       if (token == null) {
         return makeResponse(HttpStatus.forbidden,
             stringbody: 'forbiden, no token provided');
@@ -36,7 +37,7 @@ authMiddleware() {
     return response.change(headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
-      'Access-Control-Allow-Headers': 'Origin, Content-Type',
+      'Access-Control-Allow-Headers': 'Origin, Content-Type, x-access-token',
       'Content-Type': 'application/json'
     });
   });

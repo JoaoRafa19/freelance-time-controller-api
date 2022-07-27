@@ -4,7 +4,6 @@ import 'package:sembast/sembast.dart';
 import 'package:shelf/shelf.dart';
 import '../core/database/database.dart' as _db;
 import '../models/project_model.dart';
-import '../models/task_model.dart';
 
 class ProjectRepository {
   static final ProjectRepository instance = ProjectRepository._internal();
@@ -53,13 +52,13 @@ class ProjectRepository {
   /// ```
   ///
   ///
-  Future<Response> update(Project project) async {
+  Future<bool> update(Project project) async {
     try {
       final db = await _db.Database().openConnection();
 
       await storeRef.update(db, project.toJson(),
           finder: Finder(filter: Filter.equals("id", project.id)));
-      return Response.ok(jsonEncode(project));
+      return true;
     } catch (e) {
       rethrow;
     }
@@ -129,16 +128,14 @@ class ProjectRepository {
   /// final project = await ProjectRepository.instance.findByUserId(ownerId);
   /// ```
   ///
-  Future<List<Project>?> findByUser(String ownerId) async {
+  Future<List<Project>> findByUser(String ownerId) async {
     try {
       final db = await _db.Database().openConnection();
 
       final projects = await storeRef.find(db,
           finder: Finder(filter: Filter.equals('ownerId', ownerId)));
-      
-      return projects
-          .map((project) => Project.fromJson(project))
-          .toList();
+
+      return projects.map((project) => Project.fromJson(project)).toList();
     } catch (e) {
       rethrow;
     }
@@ -152,7 +149,7 @@ class ProjectRepository {
   /// ```dart
   /// final projects = await ProjectRepository.instance.findAll();
   /// ```
-  Future<List<Project?>?> findAll() async {
+  Future<List<Project>?> findAll() async {
     try {
       final db = await _db.Database().openConnection();
 

@@ -1,4 +1,3 @@
-import 'package:sembast/sembast.dart';
 import 'package:uuid/uuid.dart';
 
 import '../core/enums/priority.dart';

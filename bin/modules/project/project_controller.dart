@@ -16,6 +16,9 @@ import '../../repositories/project_repository.dart';
 part 'project_controller.g.dart';
 
 class ProjectController {
+  static final _authRepository = AuthRepository.instance;
+  static final _projectRepository = ProjectRepository.instance;
+
   @Route.get('/all')
   Future<Response> projects(Request req) async {
     try {
@@ -27,13 +30,13 @@ class ProjectController {
         );
       }
       print(token);
-      final User? user = await AuthRepository.instance.getUserByToken(token);
+      final User? user = await _authRepository.getUserByToken(token);
       if (user == null) {
         return makeResponse(HttpStatus.unauthorized,
             body: {'error': 'Unauthorized'});
       }
-      final repository = ProjectRepository.instance;
-      final projects = await repository.findAll();
+
+      final projects = await _projectRepository.findAll();
       return Response.ok(jsonEncode(projects));
     } catch (e) {
       return makeResponse(HttpStatus.badRequest,
@@ -46,12 +49,12 @@ class ProjectController {
     try {
       final token = req.headers[Strings.acesstoken.value];
 
-      final User? user = await AuthRepository.instance.getUserByToken(token!);
+      final User? user = await _authRepository.getUserByToken(token!);
       if (user == null) {
         return makeResponse(HttpStatus.unauthorized,
             body: {'error': 'Unauthorized'});
       }
-      final projects = await ProjectRepository.instance.findByUser(user.id!);
+      final projects = await _projectRepository.findByUser(user.id!);
       return Response.ok(jsonEncode(projects));
     } catch (e) {
       return makeResponse(HttpStatus.badRequest,
@@ -64,7 +67,7 @@ class ProjectController {
     try {
       final token = resquest.headers[Strings.acesstoken.value];
 
-      final User? user = await AuthRepository.instance.getUserByToken(token!);
+      final User? user = await _authRepository.getUserByToken(token!);
       if (user == null) {
         return makeResponse(HttpStatus.unauthorized,
             body: {'error': 'Unauthorized'});
@@ -82,8 +85,6 @@ class ProjectController {
   @Route.post('/')
   Future<Response> createProjects(Request req) async {
     try {
-      final _repository = ProjectRepository.instance;
-      final _autRepo = AuthRepository.instance;
       final Map body = jsonDecode(await req.readAsString());
 
       if (!(body.isNotEmpty &&
@@ -94,7 +95,7 @@ class ProjectController {
       }
       final token = req.headers[Strings.acesstoken.value];
 
-      final user = await _autRepo.getUserByToken(token!);
+      final user = await _authRepository.getUserByToken(token!);
       if (user == null) {
         return makeResponse(HttpStatus.unauthorized,
             body: {'error': 'unauthorized'});
@@ -102,7 +103,7 @@ class ProjectController {
 
       final project = Project.newProject(
           user.id!, body['name'], body['description'], Uuid().v4());
-      return await _repository.create(project);
+      return await _projectRepository.create(project);
     } catch (e) {
       return makeResponse(HttpStatus.badRequest,
           body: {'error': 'Bad Request'});
@@ -112,9 +113,6 @@ class ProjectController {
   @Route.put('/<projectId>/newtask')
   Future<Response> createTask(Request req, String projectId) async {
     try {
-      final _repository = ProjectRepository.instance;
-      final _authRepo = AuthRepository.instance;
-
       final body = jsonDecode(await req.readAsString());
 
       if (!(body.isNotEmpty &&
@@ -126,27 +124,15 @@ class ProjectController {
       }
 
       final token = req.headers[Strings.acesstoken.value];
-      final user = await _authRepo.getUserByToken(token!);
+      final user = await _authRepository.getUserByToken(token);
 
       if (user == null) {
         return makeResponse(HttpStatus.unauthorized,
             body: {'error': 'unauthorized'});
       }
-
-      final allProjects = await _repository.findAll();
-
-      if (allProjects == null) {
-        throw Exception('no projects found');
-      }
-
-      final userpProjects =
-          allProjects.where((project) => project!.ownerId == user.id).toList();
-      if (userpProjects.isEmpty) {
-        throw Exception('no projects found');
-      }
+      final projects = await _projectRepository.findByUser(user.id!);
       final project =
-          userpProjects.firstWhereOrNull((project) => project!.id == projectId);
-
+          projects.firstWhereOrNull((project) => project.id == projectId);
       if (project == null) {
         throw Exception('project no found or you dont have access');
       }
@@ -154,14 +140,45 @@ class ProjectController {
       final task = Task.newTask(body);
       project.tasks.add(task);
 
-      return await _repository.update(project);
+      final result = await _projectRepository.update(project);
+
+      if (result) {
+        return makeResponse(HttpStatus.ok, body: project.toJson());
+      } else {
+        throw Exception("Could not create this project");
+      }
     } on DatabaseException {
       return makeResponse(HttpStatus.internalServerError,
           body: {'error': 'DatabaseError'});
     } on Exception catch (e) {
       return makeErrorResponse(e);
+    } catch (e) {
+      return makeErrorResponse(Exception(e.toString()));
     }
   }
 
+  @Route.put('/<projectId>/task/<taskId>')
+  Future<Response> updateTask(
+      Request req, String projectId, String taskId) async {
+    try {
+      final body = jsonDecode(await req.readAsString());
+
+      final task = Task.fromJson(json)
+
+      final token = req.headers[Strings.acesstoken.value];
+      final user = await _authRepository.getUserByToken(token);
+
+      if (user == null) {
+        return makeResponse(HttpStatus.unauthorized,
+            body: {'error': 'unauthorized'});
+      }
+      final projects = await _projectRepository.findByUser(user.id!);
+    } on Exception catch (error) {
+      return makeErrorResponse(error);
+    }
+  }
+
+  @Route.get('/<projectId>/task/<taskId>')
+  @Route.delete('/<projectId>/task/<taskId>')
   Router get router => _$ProjectControllerRouter(this);
 }

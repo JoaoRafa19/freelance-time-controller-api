@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:sembast/sembast.dart';
 import 'package:shelf/shelf.dart';
@@ -128,7 +127,7 @@ class AuthRepository {
   /// ```
   ///
   ///
-  Future<User?> getUserByToken(String token) async {
+  Future<User?> getUserByToken(String? token) async {
     final db = await _db.Database().openConnection();
 
     final Finder finder = Finder(filter: Filter.equals("sessionToken", token));

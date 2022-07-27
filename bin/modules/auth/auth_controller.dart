@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+import '../../core/shared/utils.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
 
@@ -33,6 +34,8 @@ class AuthController {
     }
   }
 
+  
+
   @Route.get('/login')
   Future<Response> login(Request req) async {
     try {
@@ -40,6 +43,12 @@ class AuthController {
       Map<String, dynamic> params = req.url.queryParameters;
 
       if (params.containsKey('email') && params.containsKey('password')) {
+        if ((params['email'] as String ).isEmpty|| (params['password'] as String).isEmpty) {
+          return makeErrorResponse(
+            Exception('email and password are required'),
+            statusCode: HttpStatus.badRequest,
+          );
+        }
         Response result =
             await repository.login(params["email"], params["password"]);
         return result;

@@ -12,7 +12,7 @@ class Session {
       required this.sessionToken,
       required this.expiresAt});
 
-  factory Session.newSession(String username) {
+  /*sats*/factory Session.newSession(String username) {
     return Session(
         username: username,
         sessionToken: Uuid().v4(),

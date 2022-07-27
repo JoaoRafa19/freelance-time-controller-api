@@ -1,3 +1,8 @@
+import 'package:sembast/sembast.dart';
+
+import '../core/enums/project_status.dart';
+import 'task_model.dart';
+
 class Project {
   Project({
     required this.id,
@@ -6,6 +11,8 @@ class Project {
     required this.createdAt,
     required this.updatedAt,
     required this.ownerId,
+    this.status = ProjectStatus.emAndamento,
+    this.tasks = const [],
   });
 
   final String name;
@@ -15,15 +22,24 @@ class Project {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  factory Project.fromJson(Map<String, dynamic> json) {
-    return Project(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      ownerId: json['ownerId'],
+  
+  final ProjectStatus status;
+  final List<Task> tasks;
+
+  factory Project.fromJson(RecordSnapshot json) {
+    final project = Project(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String) ,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      ownerId: json['ownerId'] as String,
+      status: ProjectStatus.values[json['status'] as int],
+      tasks: json['tasks'] != null ? (json['tasks'] as List).map((task) {
+        return Task.fromJson(task ) ;
+      }).toList() : [],
     );
+    return project;
   }
 
   Map<String, dynamic> toJson() {
@@ -34,6 +50,22 @@ class Project {
       'createdAt': createdAt.toString(),
       'updatedAt': updatedAt.toString(),
       'ownerId': ownerId,
+      'status': status.index,
+      'tasks': tasks.map((task) => task.toJson()).toList(),
     };
+  }
+
+  factory Project.newProject(
+      String ownerId, String name, String description, String id) {
+    return Project(
+      id: id,
+      name: name,
+      description: description,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      ownerId: ownerId,
+      status: ProjectStatus.emAndamento,
+      tasks: [],
+    );
   }
 }

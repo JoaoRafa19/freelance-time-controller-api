@@ -31,15 +31,20 @@ If you have [Docker Desktop](https://www.docker.com/get-started) installed, you
 can build and run with the `docker` command:
 
 ```
-$ docker build . -t myserver
-$ docker run -it -p 8080:8080 myserver
+$ docker build . -t my/app
+
+$ docker run --env-file .env -d -p 8000:8000 my/app
+
 Server listening on port 8080
 ```
 
 And then from a second terminal:
 ```
 $ curl http://0.0.0.0:8080
+Hello, world!
 ```
+
+
 
 You should see the logging printed in the first terminal:
 ```

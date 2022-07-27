@@ -25,7 +25,7 @@ class UserRepository {
     return null;
   }
 
-  ///find a single user by [id]
+  ///find a single user by `id`
   ///return null if the user is not found
   Future<User?>? findById(String id) async {
     
@@ -60,7 +60,7 @@ class UserRepository {
         throw Exception("User already registered");
       }
 
-      final passwordToSave = await Utils.hashPassword(password);
+      final passwordToSave = await hashPassword(password);
 
       final user = User(
         id: Uuid().v4(),

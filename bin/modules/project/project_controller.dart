@@ -157,28 +157,45 @@ class ProjectController {
     }
   }
 
-  @Route.put('/<projectId>/task/<taskId>')
-  Future<Response> updateTask(
-      Request req, String projectId, String taskId) async {
+  @Route.get('/<projectId>/task/<taskId>')
+  Future<Response> getTask(Request req, String projectId, String taskId) async {
     try {
-      final body = jsonDecode(await req.readAsString());
-
-      final task = Task.fromJson(json)
-
-      final token = req.headers[Strings.acesstoken.value];
-      final user = await _authRepository.getUserByToken(token);
-
-      if (user == null) {
-        return makeResponse(HttpStatus.unauthorized,
-            body: {'error': 'unauthorized'});
+      final project = await _projectRepository.findById(projectId);
+      if (project == null) {
+        throw Exception("project not found");
       }
-      final projects = await _projectRepository.findByUser(user.id!);
-    } on Exception catch (error) {
-      return makeErrorResponse(error);
+      final task =
+          project.tasks.firstWhereOrNull((element) => element.id == taskId);
+      if (task == null) {
+        throw Exception("project not found");
+      }
+
+      return makeResponse(HttpStatus.found, body: project.toJson());
+    } catch (e) {
+      return makeErrorResponse(Exception(e.toString()));
     }
   }
 
-  @Route.get('/<projectId>/task/<taskId>')
   @Route.delete('/<projectId>/task/<taskId>')
+  Future<Response> deleteTask(
+      Request req, String projectId, String taskId) async {
+    try {
+      final project = await _projectRepository.findById(projectId);
+      if (project == null) {
+        throw Exception("project not found");
+      }
+      final task =
+          project.tasks.firstWhereOrNull((element) => element.id == taskId);
+      if (task == null) {
+        throw Exception("project not found");
+      }
+      project.tasks.remove(task);
+      await _projectRepository.update(project);
+      return makeResponse(HttpStatus.ok, body: project.toJson());
+    } catch (e) {
+      return makeErrorResponse(Exception(e.toString()));
+    }
+  }
+
   Router get router => _$ProjectControllerRouter(this);
 }

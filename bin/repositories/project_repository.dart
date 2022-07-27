@@ -100,16 +100,16 @@ class ProjectRepository {
   /// ```dart
   ///  final project = await ProjectRepository.instance.findById(id);
   /// ```
-  Future<Response> findById(String id) async {
+  Future<Project?> findById(String id) async {
     try {
       final db = await _db.Database().openConnection();
 
       final Finder finder = Finder(filter: Filter.equals('id', id));
       final project = await storeRef.findFirst(db, finder: finder);
       if (project == null) {
-        return Response.notFound(jsonEncode(id));
+        return null;
       }
-      return Response.ok(jsonEncode(project));
+      return Project.fromJson(project);
     } catch (e) {
       rethrow;
     }

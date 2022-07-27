@@ -8,6 +8,7 @@ class Task {
   final String name;
   final String? description;
   final DateTime createdAt;
+  DateTime? updateAt;
   final double estimate;
   final double completedWork;
   final bool complete;
@@ -20,6 +21,7 @@ class Task {
     required this.estimate,
     required this.createdAt,
     required this.completedWork,
+    required this.updateAt,
     this.complete = false,
     this.priority,
   });
@@ -28,12 +30,17 @@ class Task {
     return Task(
       id: json['id'] as String,
       name: json['name'] as String,
-      description: json['description'] as String,
+      description: json['description'] != null ?json['description'] as String : null,
       createdAt: DateTime.parse(json['createdAt'] as String),
       estimate: json['estimate'] as double,
       completedWork: json['completedWork'] as double,
       complete: json['complete'] as bool,
-      priority: Priority.values[json['priority'] as int],
+      updateAt: json['updateAt'] != null
+          ? DateTime.parse(json['updateAt'] as String)
+          : DateTime.parse(json['createdAt'] as String),
+      priority: json['priority'] != null
+          ? Priority.values[json['priority'] as int]
+          : null,
     );
   }
 
@@ -47,6 +54,7 @@ class Task {
       'completedWork': completedWork,
       'complete': complete,
       'priority': priority?.index,
+      'updateAt': updateAt.toString(),
     };
   }
 
@@ -62,6 +70,7 @@ class Task {
       priority: json['priority'] != null
           ? Priority.values[json['priority'] as int]
           : null,
+      updateAt: DateTime.now(),
     );
   }
 }

@@ -81,6 +81,7 @@ main(List<String> args) async {
         })
         ..serverHeader = 'dart-server'
         ..autoCompress = true
+        
         ..serverHeader = 'dart-server';
 
   print('Serving at http://${server.address.address}:${server.port}');

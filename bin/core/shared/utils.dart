@@ -25,6 +25,6 @@ Response makeErrorResponse(
   int? statusCode,
 }) {
   return makeResponse(statusCode ?? 500, body: {
-    'traceback error': e.toString(),
+    'error': e.toString(),
   });
 }

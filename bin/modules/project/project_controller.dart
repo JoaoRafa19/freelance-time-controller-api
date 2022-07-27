@@ -143,7 +143,7 @@ class ProjectController {
       final result = await _projectRepository.update(project);
 
       if (result) {
-        return makeResponse(HttpStatus.ok, body: project.toJson());
+        return makeResponse(HttpStatus.ok, body: task.toJson());
       } else {
         throw Exception("Could not create this project");
       }
@@ -153,7 +153,7 @@ class ProjectController {
     } on Exception catch (e) {
       return makeErrorResponse(e);
     } catch (e) {
-      return makeErrorResponse(Exception(e.toString()));
+      return makeErrorResponse(e as Exception);
     }
   }
 
@@ -170,9 +170,39 @@ class ProjectController {
         throw Exception("project not found");
       }
 
-      return makeResponse(HttpStatus.found, body: project.toJson());
+      return makeResponse(HttpStatus.found, body: task.toJson());
     } catch (e) {
-      return makeErrorResponse(Exception(e.toString()));
+      return makeErrorResponse(e as Exception);
+    }
+  }
+
+  @Route.put('/<projectId>/task/<taskId>')
+  Future<Response> updateTask(
+      Request req, String projectId, String taskId) async {
+    try {
+      Map<String, dynamic> body = jsonDecode(await req.readAsString());
+      final project = await _projectRepository.findById(projectId);
+      if (project == null) {
+        throw Exception("project not found");
+      }
+      final task =
+          project.tasks.firstWhereOrNull((element) => element.id == taskId);
+      if (task == null) {
+        throw Exception("Task not found");
+      }
+      var newTask = task.toJson();
+      for (var k in body.keys) {
+        newTask[k] = body[k];
+      }
+      project.tasks[project.tasks.indexOf(task)] = Task.fromJson(newTask)
+        ..updateAt = DateTime.now();
+      final result = await _projectRepository.update(project);
+      if (!result) {
+        throw Exception("Cant update task");
+      }
+      return makeResponse(HttpStatus.ok, body: Task.fromJson(newTask).toJson());
+    } catch (e) {
+      return makeErrorResponse(e as Exception);
     }
   }
 
@@ -193,7 +223,7 @@ class ProjectController {
       await _projectRepository.update(project);
       return makeResponse(HttpStatus.ok, body: project.toJson());
     } catch (e) {
-      return makeErrorResponse(Exception(e.toString()));
+      return makeErrorResponse(e as Exception);
     }
   }
 

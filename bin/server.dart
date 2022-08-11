@@ -32,7 +32,7 @@ main(List<String> args) async {
   }
   // Enviroment definition
   print("Loading enviroment ${arguments['enviroment']}");
-  Config.initialize([arguments['enviroment']]);
+  //Config.initialize([arguments['enviroment']]);
 
   final router = Router()
     ..get('/', (request) => Response.ok('Hello World!'))
@@ -81,12 +81,11 @@ main(List<String> args) async {
         })
         ..serverHeader = 'dart-server'
         ..autoCompress = true
-        
         ..serverHeader = 'dart-server';
 
   print('Serving at http://${server.address.address}:${server.port}');
 
-  if (arguments['logip']) {
+  if (true || arguments['logip']) {
     print('Databse ${Config.instance.database}');
 
     print('Logging IP address');

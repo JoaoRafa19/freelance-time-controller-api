@@ -28,16 +28,15 @@ class Config {
   static Enviroment env = Enviroment.dev;
 
   static DotEnv dotenv = DotEnv(includePlatformEnvironment: true);
-  String get portStr => dotenv.map[Strings.port.value] ?? '3000';
+  String get portStr => '80';
   int get port => int.parse(portStr);
-  String? get database => dotenv.map[Strings.database.value];
+  String? get database => 'database.db';
   String get address => InternetAddress.anyIPv4.address;
   static void initialize(List<String> enviroment) async {
     try {
-      if (!enviroment.contains(Strings.devenv.value)) {
+      
         env = Enviroment.prod;
-      }
-      dotenv.load(enviroment);
+      
       if (dotenv.isEveryDefined(_defaultEnvParams)) {
         print('Config loaded');
       } else {
@@ -47,7 +46,6 @@ class Config {
       }
     } catch (e) {
       print(e);
-      exit(1);
     }
   }
 }

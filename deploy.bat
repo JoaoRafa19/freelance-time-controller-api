@@ -1,8 +1,8 @@
- echo -e "Script de deploy Interativo (Ambiente Homologação)"
+ echo Script de deploy Interativo (Ambiente Homologação)
+ 
 
-docker-compose --env-file .env run -d -p 8000:8000 web
-heroku container:push web 
-heroku container:release web
-heroku logs --tail
+docker build -t freeler .
+docker tag freeler freeler.azurecr.io/freeler
+docker push freeler.azurecr.io/freeler
 
 pause

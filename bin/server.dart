@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:args/args.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
@@ -12,27 +10,6 @@ import 'modules/user/user_controller.dart';
 
 main(List<String> args) async {
   // Arguments
-  var parser = ArgParser()
-    ..addOption('port',
-        abbr: 'p', defaultsTo: '8080', help: "Port to listen on.")
-    ..addFlag('logip', abbr: 'l', defaultsTo: false, help: "Log IP address.")
-    ..addOption('enviroment',
-        abbr: 'e',
-        defaultsTo: '.env',
-        help: "Enviroment file to load.",
-        valueHelp: "filename")
-    ..addFlag('help', abbr: 'h', negatable: false);
-
-  var arguments = parser.parse(args);
-
-  if (arguments['help']) {
-    print('Usage: server [options]');
-    print(parser.usage);
-    exit(0);
-  }
-  // Enviroment definition
-  print("Loading enviroment ${arguments['enviroment']}");
-  //Config.initialize([arguments['enviroment']]);
 
   final router = Router()
     ..get('/', (request) => Response.ok('Hello World!'))
@@ -74,34 +51,13 @@ main(List<String> args) async {
       }))
       .addHandler(router);
   // Start the server.
-  var server =
-      await io.serve(handler, Config.instance.address, Config.instance.port)
-        ..handleError((error) {
-          print('Error: $error');
-        })
-        ..serverHeader = 'dart-server'
-        ..autoCompress = true
-        ..serverHeader = 'dart-server';
+  var server = await io.serve(handler, Config.instance.address, 80)
+    ..handleError((error) {
+      print('Error: $error');
+    })
+    ..serverHeader = 'dart-server'
+    ..autoCompress = true
+    ..serverHeader = 'dart-server';
 
   print('Serving at http://${server.address.address}:${server.port}');
-
-  if (true || arguments['logip']) {
-    print('Databse ${Config.instance.database}');
-
-    print('Logging IP address');
-
-    _logIp();
-  }
-}
-
-_logIp() {
-  print("ipv4");
-  print(InternetAddress.anyIPv4.address);
-  print(InternetAddress.anyIPv4.host);
-  print(InternetAddress.anyIPv4.rawAddress);
-  print("ipv6");
-
-  print(InternetAddress.anyIPv6.address);
-  print(InternetAddress.anyIPv6.host);
-  print(InternetAddress.anyIPv6.rawAddress);
 }

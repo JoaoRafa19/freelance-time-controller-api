@@ -13,7 +13,7 @@ class RootController {
     try {
       Map<String, dynamic> responseBody = {
         'database': Config.instance.database,
-        'address': Config.instance.address,
+        'address': Config.instance.address + Config.instance.port.toString(),
         'datetime': DateTime.now().toString(),
       };
       return makeResponse(200, body: responseBody);

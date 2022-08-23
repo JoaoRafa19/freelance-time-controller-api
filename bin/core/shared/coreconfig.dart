@@ -28,7 +28,7 @@ class Config {
   static Enviroment env = Enviroment.dev;
 
   static DotEnv dotenv = DotEnv(includePlatformEnvironment: true);
-  String get portStr => '8080';
+  String get portStr => '80';
   int get port => int.parse(portStr);
   String? get database => 'database.db';
   String get address => InternetAddress.anyIPv4.address;

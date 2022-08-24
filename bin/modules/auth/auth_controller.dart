@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+import '../../core/shared/utils.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
 
@@ -33,64 +34,58 @@ class AuthController {
     }
   }
 
-  //delete all users
-  // @Route.delete('/deleteall')
-  // Future<Response> deleteAll(Request request) async {
-  //   try {
-  //     final repository = UserRepository.instance;
-  //     await repository.deleteAll();
-  //     return Response.ok(json.encode('all users deleted'));
-  //   } catch (e) {
-  //     return Response.internalServerError(body: e.toString());
-  //   }
-  // }
+  
 
-  // @Route.delete('/delete')
-  // Future<Response> del(Request req) async {
-  //   try {
-  //     final repository = UserRepository.instance;
-  //     Map<String, dynamic> params = req.url.queryParameters;
-  //     if (params.containsKey('id')) {
-  //       final user = await repository.findById(params['id']);
-  //       if (user == null || user.id == null) {
-  //         throw Exception("User not found");
-  //       }
-  //       await repository.delete(user.id!);
-  //       return Response.ok(json.encode('user deleted'));
-  //     } else if (params.containsKey('email')) {
-  //       final user = await repository.findByEmail(params['email']);
-  //       if (user == null || user.id == null) {
-  //         throw Exception("User not found");
-  //       }
-  //       await repository.delete(user.id!);
-  //       return Response.ok(json.encode('user deleted'));
-  //     }
-  //     return Response.badRequest(body: 'id or email are required');
-  //   } catch (e) {
-  //     return Response.internalServerError(body: e.toString());
-  //   }
-  // }
+  @Route.get('/login')
+  Future<Response> login(Request req) async {
+    try {
+      final repository = AuthRepository.instance;
+      Map<String, dynamic> params = req.url.queryParameters;
 
-  // @Route.get('/login')
-  // Future<Response> login(Request req) async {
-  //   try {
-  //     final repository = AuthRepository.instance;
-  //     Map<String, dynamic> params = req.url.queryParameters;
+      if (params.containsKey('email') && params.containsKey('password')) {
+        if ((params['email'] as String ).isEmpty|| (params['password'] as String).isEmpty) {
+          return makeErrorResponse(
+            Exception('email and password are required'),
+            statusCode: HttpStatus.badRequest,
+          );
+        }
+        Response result =
+            await repository.login(params["email"], params["password"]);
+        return result;
+      }
+      final response = Response(HttpStatus.unauthorized,
+          body: "incorrect user and/or password");
+      return response;
+    } catch (error) {
+      return Response.internalServerError(
+          body: jsonEncode(
+              {"message": 'a problem ocourred', "error": error.toString()}));
+    }
+  }
 
-  //     if (params.containsKey('email') && params.containsKey('password')) {
-  //       Response result =
-  //           await repository.login(params["email"], params["password"]);
-  //       return result;
-  //     }
-  //     final response = Response(HttpStatus.unauthorized,
-  //         body: "incorrect user and/or password");
-  //     return response;
-  //   } catch (error) {
-  //     return Response.internalServerError(
-  //         body: jsonEncode(
-  //             {"message": 'a problem ocourred', "error": error.toString()}));
-  //   }
-  // }
+  @Route.get('/logout')
+  Future<Response> logout(Request req) async {
+    try {
+      final repository = AuthRepository.instance;
+      Map<String, dynamic> params = req.url.queryParameters;
+      final token = params["token"];
+      if (token == null) {
+        return Response.badRequest(
+            body: jsonEncode({"error": "token is required"}));
+      }
+      if (params.containsKey('token')) {
+        Response result = await repository.logout(params["token"]);
+        return result;
+      }
+      final response = Response(HttpStatus.unauthorized,
+          body: "incorrect user and/or password");
+      return response;
+    } catch (error) {
+      return Response.internalServerError(
+          body: jsonEncode(
+              {"message": 'a problem ocourred', "error": error.toString()}));
+    }
+  }
 
   Router get router => _$AuthControllerRouter(this);
 }

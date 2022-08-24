@@ -51,13 +51,14 @@ main(List<String> args) async {
       }))
       .addHandler(router);
   // Start the server.
-  var server = await io.serve(handler, Config.instance.address, 80)
-    ..handleError((error) {
-      print('Error: $error');
-    })
-    ..serverHeader = 'dart-server'
-    ..autoCompress = true
-    ..serverHeader = 'dart-server';
+  var server =
+      await io.serve(handler, Config.instance.address, Config.instance.port)
+        ..handleError((error) {
+          print('Error: $error');
+        })
+        ..serverHeader = 'dart-server'
+        ..autoCompress = true
+        ..serverHeader = 'dart-server';
 
   print('Serving at http://${server.address.address}:${server.port}');
 }

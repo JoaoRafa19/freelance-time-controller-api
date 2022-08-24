@@ -8,11 +8,9 @@ import 'package:dotenv/dotenv.dart';
 import 'constants.dart';
 
 class Config {
-  static final Config instance = Config._internal();
-  factory Config() {
-    return instance;
-  }
-  Config._internal();
+  static final Config instance = Config._();
+
+  Config._();
   static final List<String> _defaultEnvParams = [
     Strings.port.value,
     Strings.database.value

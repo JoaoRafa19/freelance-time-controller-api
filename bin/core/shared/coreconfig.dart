@@ -8,11 +8,9 @@ import 'package:dotenv/dotenv.dart';
 import 'constants.dart';
 
 class Config {
-  static final Config instance = Config._internal();
-  factory Config() {
-    return instance;
-  }
-  Config._internal();
+  static final Config instance = Config._();
+
+  Config._();
   static final List<String> _defaultEnvParams = [
     Strings.port.value,
     Strings.database.value
@@ -34,15 +32,13 @@ class Config {
   String get address => InternetAddress.anyIPv4.address;
   static void initialize(List<String> enviroment) async {
     try {
-      
-        env = Enviroment.prod;
-      
+      env = Enviroment.prod;
+
       if (dotenv.isEveryDefined(_defaultEnvParams)) {
         print('Config loaded');
       } else {
-        _defaultEnvParams.removeWhere((e) => dotenv.map[e] != null);
         throw Exception(
-            "Config not loaded, missing enviroment variables \n ${_defaultEnvParams.join(', ')}");
+            "Config not loaded, missing enviroment variables \n ${_defaultEnvParams.where((e) => !dotenv.isDefined(e)).join(', ')}");
       }
     } catch (e) {
       print(e);
